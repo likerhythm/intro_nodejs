@@ -3,15 +3,17 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const path = require('path');
 const session = require('express-session');
-const nunjucks = reuire('nunjucks');
+const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
 
 dotenv.config();
 const pageRouter = require('./routes/page');
 
 const app = express();
-app.set('port', process.env.PORT||8001);
+app.set('port', process.env.PORT||3000);
 app.set('view engine', 'html');
+// 넌적스 파일들 위치 및 옵션 설정
+// 위치: views 폴더
 nunjucks.configure('views', {
 	express: app,
 	watch: true,

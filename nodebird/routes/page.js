@@ -27,4 +27,4 @@ router.get('/', (req, res, next) => {
 	});
 });
 
-comule.exports = router;
+module.exports = router;
