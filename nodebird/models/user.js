@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = class User extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
+	  // 각 컬럼들의 설정
       email: {
         type: Sequelize.STRING(40),
         allowNull: true,

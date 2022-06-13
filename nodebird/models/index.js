@@ -1,37 +1,33 @@
-'use strict';
-
-const fs = require('fs');
-const path = require('path');
 const Sequelize = require('sequelize');
-const basename = path.basename(__filename);
+// env(환경) 설정 - 개발/테스트/배포
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+// 설정한 env에 해당하는 설정값들을 config.json 파일에서 가져옴
+const config = require('../config/config')[env];
+// 모델 가져오기
+const User = require('./user');
+const Post = require('./post');
+const Hashtag = require('./hashtag');
+
 const db = {};
+// config.json에서 가져온 설정들로 시퀄라이즈 객체 생성
+const sequelize = new Sequelize(
+  config.database, config.username, config.password, config,
+);
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
-
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
-
+// db 객체에 시퀄라이즈와 모델 객체 넣기
 db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.User = User;
+db.Post = Post;
+db.Hashtag = Hashtag;
+
+// 시퀄라이즈 객체를 인수전달하여 모델 설정
+User.init(sequelize);
+Post.init(sequelize);
+Hashtag.init(sequelize);
+
+// db 객체를 인수전달하여 관계 설정
+User.associate(db);
+Post.associate(db);
+Hashtag.associate(db);
 
 module.exports = db;
