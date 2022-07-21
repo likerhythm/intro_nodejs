@@ -38,5 +38,20 @@ module.exports = class User extends Sequelize.Model {
     });
   }
 	
-  static associate(db){}
+  static associate(db){
+    // user.getPosts, user.addPosts 메서드 생성됨
+    db.User.hasMany(db.Post);
+    // 같은 user 모델끼리 N:M 관계 => 팔로우 기능
+    db.User.belongsToMany(db.User, {
+      foreignKey: 'followingId',
+      as: 'Followers',
+      // Follow라는 새로운 모델 생김
+      through: 'Follow',
+    });
+    db.User.belongsToMany(db.User, {
+      foreignKey: 'followerId',
+      as: 'Followings',
+      through: 'Follow',
+    });
+  }
 };
